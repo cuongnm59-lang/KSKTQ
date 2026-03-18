@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KSKTQ 2026 – Bệnh viện Tâm Anh</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#f1f1f1}
+::-webkit-scrollbar-thumb{background:#c1c8d4;border-radius:3px}
+.sidebar{width:220px;min-width:220px;background:linear-gradient(180deg,#003087 0%,#00509e 100%);color:#fff;display:flex;flex-direction:column;height:100vh;position:sticky;top:0}
+.sidebar-logo{padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.15)}
+.sidebar-logo h2{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
+.sidebar-logo p{font-size:11px;color:rgba(255,255,255,0.65);margin-top:3px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.75);transition:all .15s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:#fff}
+.nav-item.active{background:rgba(255,255,255,0.15);color:#fff;border-left-color:#63b3ed;font-weight:600}
+.nav-item i{width:16px;text-align:center;font-size:13px}
+.nav-section{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);padding:14px 16px 6px;font-weight:600}
+.main{flex:1;overflow-y:auto;padding:24px}
+.page-header{margin-bottom:20px}
+.page-header h1{font-size:22px;font-weight:700;color:#1a365d}
+.page-header p{font-size:13px;color:#718096;margin-top:3px}
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);padding:16px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:#2d3748;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat-card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border-left:4px solid var(--color)}
+.stat-card .label{font-size:11px;color:#718096;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.stat-card .value{font-size:28px;font-weight:800;color:var(--color);margin-top:4px}
+.stat-card .sub{font-size:11px;color:#a0aec0;margin-top:2px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-green{background:#c6f6d5;color:#276749}
+.badge-blue{background:#bee3f8;color:#2b6cb0}
+.badge-yellow{background:#fefcbf;color:#975a16}
+.badge-red{background:#fed7d7;color:#9b2c2c}
+.badge-gray{background:#edf2f7;color:#4a5568}
+.badge-purple{background:#e9d8fd;color:#6b46c1}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th{background:#f7fafc;color:#4a5568;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:left;border-bottom:2px solid #e2e8f0}
+.table td{padding:10px 12px;border-bottom:1px solid #f0f4f8;vertical-align:middle}
+.table tr:hover td{background:#f7fafc}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:#003087;color:#fff}
+.btn-primary:hover{background:#00509e}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-outline{background:#fff;color:#4a5568;border:1px solid #e2e8f0}
+.btn-outline:hover{background:#f7fafc}
+.btn-danger{background:#fff;color:#c53030;border:1px solid #fed7d7}
+.btn-danger:hover{background:#fff5f5}
+.progress-bar{background:#e2e8f0;border-radius:99px;height:8px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;transition:width .3s}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-header{padding:18px 20px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-size:15px;font-weight:700;color:#1a365d}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:1px solid #e2e8f0;display:flex;gap:8px;justify-content:flex-end}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:#4a5568;margin-bottom:5px}
+.form-input{width:100%;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;color:#2d3748;transition:border .15s;outline:none}
+.form-input:focus{border-color:#63b3ed}
+.form-select{width:100%;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;color:#2d3748;outline:none;background:#fff}
+.form-select:focus{border-color:#63b3ed}
+.form-textarea{width:100%;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;color:#2d3748;resize:vertical;min-height:80px;outline:none}
+.form-textarea:focus{border-color:#63b3ed}
+.tabs{display:flex;gap:4px;background:#f7fafc;border-radius:10px;padding:4px;margin-bottom:16px}
+.tab{padding:7px 14px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;color:#718096;transition:all .15s}
+.tab.active{background:#fff;color:#003087;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.chip{padding:5px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:#fff;color:#4a5568;transition:all .15s}
+.chip.active{background:#003087;color:#fff;border-color:#003087}
+.empty-state{text-align:center;padding:40px 20px;color:#a0aec0}
+.empty-state i{font-size:40px;margin-bottom:12px;display:block}
+.empty-state p{font-size:14px}
+.log-item{border-left:3px solid var(--lc,#e2e8f0);padding:10px 14px;margin-bottom:10px;background:#f7fafc;border-radius:0 8px 8px 0}
+.log-item .log-time{font-size:11px;color:#a0aec0;margin-bottom:3px}
+.log-item .log-msg{font-size:13px;color:#2d3748;font-weight:500}
+.log-item .log-sub{font-size:12px;color:#718096;margin-top:2px}
+.raci-table{font-size:12px}
+.raci-table th,.raci-table td{padding:8px 10px;border:1px solid #e2e8f0;text-align:center}
+.raci-table th{background:#f7fafc;font-weight:700;color:#4a5568}
+.raci-r{background:#c6f6d5;color:#276749;font-weight:700;border-radius:4px;padding:2px 6px}
+.raci-a{background:#bee3f8;color:#2b6cb0;font-weight:700;border-radius:4px;padding:2px 6px}
+.raci-c{background:#fefcbf;color:#975a16;font-weight:700;border-radius:4px;padding:2px 6px}
+.raci-i{background:#edf2f7;color:#4a5568;font-weight:700;border-radius:4px;padding:2px 6px}
+.kpi-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f4f8}
+.kpi-row:last-child{border-bottom:none}
+.okr-card{border-left:4px solid var(--oc);background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.risk-level-high{color:#c53030;font-weight:700}
+.risk-level-medium{color:#975a16;font-weight:700}
+.risk-level-low{color:#276749;font-weight:700}
+.ws-badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.timeline-bar{position:relative;height:28px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-top:4px}
+.timeline-fill{position:absolute;left:0;top:0;height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;color:#fff;font-weight:600}
+.update-card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:10px;border-top:3px solid var(--uc,#e2e8f0)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState, useMemo, useRef} = React;
+
+// ===== DATA =====
+const WS_COLORS = {
+  'Quản lý dự án':'#003087','Sản phẩm':'#00509e','Data & GPCN':'#6b46c1',
+  'Tổng đài':'#276749','SEO & Website':'#975a16','Marketing & Truyền thông':'#c53030',
+  'Nghiên cứu thị trường':'#2b6cb0','PMO':'#003087'
+};
+const WS_BG = {
+  'Quản lý dự án':'#bee3f8','Sản phẩm':'#bee3f8','Data & GPCN':'#e9d8fd',
+  'Tổng đài':'#c6f6d5','SEO & Website':'#fefcbf','Marketing & Truyền thông':'#fed7d7',
+  'Nghiên cứu thị trường':'#bee3f8','PMO':'#bee3f8'
+};
+
+const INIT = {
+  team:[
+    {id:'T01',bo_phan:'Ban Giám đốc',vai_tro:'Chỉ đạo chiến lược',pic:'Sếp Nga',phone:'',email:''},
+    {id:'T02',bo_phan:'Strategy/Data',vai_tro:'PMO & Quản lý dự án, Data Analytics',pic:'Cường (ĐSMT)',phone:'',email:''},
+    {id:'T03',bo_phan:'KHTH & Chuyên môn',vai_tro:'Đồng bộ gói khám, quản lý sản phẩm',pic:'Đậu Thanh',phone:'',email:''},
+    {id:'T04',bo_phan:'IT/CDP',vai_tro:'Công nghệ, Automation, API',pic:'IT Team',phone:'',email:''},
+    {id:'T05',bo_phan:'Tổng đài',vai_tro:'Tư vấn, chốt sale, follow-up',pic:'Chị Tâm / Hảo / Trinh',phone:'',email:''},
+    {id:'T06',bo_phan:'SEO',vai_tro:'Tối ưu SEO, nội dung website',pic:'Lâm / Lân',phone:'',email:''},
+    {id:'T07',bo_phan:'Marketing/Truyền thông',vai_tro:'Content, Social, Ads, PR',pic:'Đậu Thanh & Văn Thanh',phone:'',email:''},
+    {id:'T08',bo_phan:'PR',vai_tro:'Quan hệ báo chí, PR bài viết',pic:'Văn Thanh',phone:'',email:''},
+    {id:'T09',bo_phan:'Ads/Performance',vai_tro:'Quảng cáo Facebook, Google, TikTok',pic:'Phúc',phone:'',email:''},
+    {id:'T10',bo_phan:'Nghiên cứu thị trường',vai_tro:'Insight khách hàng, phân tích đối thủ',pic:'Thu Hà',phone:'',email:''},
+  ],
+  tasks:[
+    {id:1,ws:'Quản lý dự án',task:'Xác định mục tiêu chiến dịch KSKTQ',pic_dept:'ĐSMT',pic:'Cường',support:'BGĐ',deadline:'2026-03-05',output:'Project objective',status:'Đã hoàn thành'},
+    {id:2,ws:'Quản lý dự án',task:'Xây dựng Master Project Plan',pic_dept:'ĐSMT',pic:'Cường',support:'Tất cả các Bộ phận',deadline:'2026-03-10',output:'Master plan',status:'Đã hoàn thành'},
+    {id:3,ws:'Quản lý dự án',task:'Phân bổ workstream cho từng phòng ban',pic_dept:'ĐSMT',pic:'Cường',support:'Tất cả các Bộ phận',deadline:'2026-03-10',output:'Workstream structure',status:'Đã hoàn thành'},
+    {id:4,ws:'Quản lý dự án',task:'Thiết lập KPI toàn dự án',pic_dept:'ĐSMT',pic:'Cường',support:'Tất cả các Bộ phận',deadline:'2026-03-15',output:'KPI framework',status:'Đang triển khai'},
+    {id:5,ws:'Quản lý dự án',task:'Thiết lập weekly project review',pic_dept:'ĐSMT',pic:'Cường',support:'Tất cả các bộ phận',deadline:'2026-03-14',output:'Weekly report template',status:'Đang triển khai'},
+    {id:6,ws:'Sản phẩm',task:'Rà soát danh mục gói khám hiện tại',pic_dept:'Marketing',pic:'Đậu Thanh',support:'KHTH, Tổng đài, Truyền thông',deadline:'2026-03-16',output:'Rà soát',status:'Đang triển khai'},
+    {id:7,ws:'Sản phẩm',task:'Đồng bộ tên gói khám (Vàng / Bạc / Kim cương)',pic_dept:'Marketing',pic:'Đậu Thanh',support:'Kế hoạch Tổng hợp 2 miền',deadline:'2026-03-20',output:'Package structure',status:'Đang triển khai'},
+    {id:8,ws:'Sản phẩm',task:'Chuẩn hóa mức giá gói khám',pic_dept:'Marketing',pic:'Đậu Thanh',support:'Finance',deadline:'2026-03-22',output:'Pricing table',status:'Đang triển khai'},
+    {id:9,ws:'Sản phẩm',task:'Chuẩn hóa nội dung từng gói khám',pic_dept:'Marketing',pic:'Đậu Thanh',support:'Kế hoạch Tổng hợp 2 miền',deadline:'2026-03-25',output:'Package description',status:'Đang triển khai'},
+    {id:10,ws:'Sản phẩm',task:'Chuẩn hóa tài liệu giới thiệu gói khám',pic_dept:'Marketing',pic:'Đậu Thanh',support:'Kế hoạch Tổng hợp 2 miền',deadline:'2026-03-30',output:'Sales materials',status:'Đang triển khai'},
+    {id:11,ws:'Data & GPCN',task:'Xây dựng framework tracking dữ liệu khách',pic_dept:'Data/GPCN',pic:'Cường Data',support:'Marketing',deadline:'',output:'Tracking framework',status:'Chưa bắt đầu'},
+    {id:12,ws:'Data & GPCN',task:'Kết nối dữ liệu Ads → CDP',pic_dept:'Data/GPCN',pic:'Cường Data',support:'Marketing',deadline:'',output:'Data integration',status:'Chưa bắt đầu'},
+    {id:13,ws:'Data & GPCN',task:'Kết nối CDP → Tổng Đài',pic_dept:'Data/GPCN',pic:'Cường Data',support:'Tổng Đài',deadline:'',output:'Lead flow system',status:'Chưa bắt đầu'},
+    {id:14,ws:'Data & GPCN',task:'Kết nối HIS với CRM',pic_dept:'Data/GPCN',pic:'Cường Data',support:'Kế hoạch Tổng hợp, Tổng đài',deadline:'',output:'Patient data sync',status:'Chưa bắt đầu'},
+    {id:15,ws:'Data & GPCN',task:'Xây dựng dashboard đo lường hiệu quả',pic_dept:'Data/GPCN',pic:'Cường Data',support:'ĐSMT',deadline:'',output:'KPI dashboard',status:'Chưa bắt đầu'},
+    {id:16,ws:'Tổng đài',task:'Xây dựng kịch bản tư vấn KSKTQ',pic_dept:'Tổng Đài',pic:'Tâm/Trinh/Hảo',support:'Marketing',deadline:'',output:'Call script',status:'Chưa bắt đầu'},
+    {id:17,ws:'Tổng đài',task:'Đào tạo nhân viên tổng đài',pic_dept:'Tổng Đài',pic:'Tâm/Trinh/Hảo',support:'Marketing',deadline:'',output:'Training completion',status:'Chưa bắt đầu'},
+    {id:18,ws:'Tổng đài',task:'Thiết lập quy trình follow-up khách',pic_dept:'Tổng Đài',pic:'Tâm/Trinh/Hảo',support:'Marketing',deadline:'',output:'Follow-up protocol',status:'Chưa bắt đầu'},
+    {id:19,ws:'Tổng đài',task:'Thiết lập quy trình xin Zalo / Email khách',pic_dept:'Tổng Đài',pic:'Tâm/Trinh/Hảo',support:'Marketing',deadline:'',output:'Contact capture',status:'Chưa bắt đầu'},
+    {id:20,ws:'Tổng đài',task:'Thiết lập quy trình gọi lại khách không đến khám',pic_dept:'Tổng Đài',pic:'Tâm/Trinh/Hảo',support:'Cường Data',deadline:'',output:'Follow-up workflow',status:'Chưa bắt đầu'},
+    {id:21,ws:'SEO & Website',task:'Audit nội dung SEO hiện tại',pic_dept:'SEO',pic:'Lân/Lâm',support:'Truyền thông',deadline:'',output:'SEO audit',status:'Chưa bắt đầu'},
+    {id:22,ws:'SEO & Website',task:'Tối ưu cấu trúc bài SEO',pic_dept:'SEO',pic:'Lân/Lâm',support:'Truyền thông',deadline:'',output:'SEO structure',status:'Chưa bắt đầu'},
+    {id:23,ws:'SEO & Website',task:'Bổ sung hình ảnh dịch vụ',pic_dept:'SEO',pic:'Lân/Lâm',support:'Truyền thông',deadline:'',output:'Image assets',status:'Chưa bắt đầu'},
+    {id:24,ws:'SEO & Website',task:'Bổ sung review trải nghiệm khách hàng',pic_dept:'SEO',pic:'Lân/Lâm',support:'Truyền thông',deadline:'',output:'Testimonials',status:'Chưa bắt đầu'},
+    {id:25,ws:'SEO & Website',task:'Tối ưu form đặt lịch',pic_dept:'SEO',pic:'Lân/Lâm',support:'Tổng Đài + Website',deadline:'',output:'Booking form',status:'Chưa bắt đầu'},
+    {id:26,ws:'Marketing & Truyền thông',task:'Xác định thông điệp truyền thông',pic_dept:'Marketing-TT',pic:'Đậu Thanh/Văn Thanh',support:'Marketing',deadline:'',output:'Message framework',status:'Chưa bắt đầu'},
+    {id:27,ws:'Marketing & Truyền thông',task:'Xây dựng ma trận nội dung tổng thể',pic_dept:'Marketing-TT',pic:'Đậu Thanh/Văn Thanh',support:'Truyền thông',deadline:'',output:'Content plan',status:'Chưa bắt đầu'},
+    {id:28,ws:'Marketing & Truyền thông',task:'Lập media plan',pic_dept:'Ads Opt',pic:'Phúc',support:'Marketing + Truyền thông',deadline:'',output:'Media plan',status:'Chưa bắt đầu'},
+    {id:29,ws:'Marketing & Truyền thông',task:'Triển khai chạy quảng cáo chiến dịch',pic_dept:'Ads Opt',pic:'Phúc',support:'Marketing + Truyền thông',deadline:'',output:'Campaign launch',status:'Chưa bắt đầu'},
+    {id:30,ws:'Marketing & Truyền thông',task:'Triển khai PR',pic_dept:'Truyền thông-QHBC',pic:'Văn Thanh',support:'Marketing',deadline:'',output:'PR coverage',status:'Chưa bắt đầu'},
+    {id:31,ws:'Marketing & Truyền thông',task:'Theo dõi hiệu quả chiến dịch',pic_dept:'Marketing',pic:'Cường',support:'ĐSMT-Data',deadline:'',output:'Campaign report',status:'Chưa bắt đầu'},
+    {id:32,ws:'Nghiên cứu thị trường',task:'Phân tích tệp khách hàng KSKTQ',pic_dept:'NCTT',pic:'Thu Hà',support:'Marketing - ĐSMT',deadline:'',output:'Customer insight',status:'Chưa bắt đầu'},
+    {id:33,ws:'Nghiên cứu thị trường',task:'Phân tích nhu cầu khám sức khỏe',pic_dept:'NCTT',pic:'Thu Hà',support:'Marketing - ĐSMT',deadline:'',output:'Demand insight',status:'Chưa bắt đầu'},
+    {id:34,ws:'Nghiên cứu thị trường',task:'Phân tích hành vi tìm kiếm',pic_dept:'NCTT',pic:'Thu Hà',support:'SEO',deadline:'',output:'Search insight',status:'Chưa bắt đầu'},
+    {id:35,ws:'Nghiên cứu thị trường',task:'Phân tích đối thủ gói khám',pic_dept:'NCTT',pic:'Thu Hà',support:'ĐSMT',deadline:'',output:'Competitor analysis',status:'Chưa bắt đầu'},
+    {id:36,ws:'Nghiên cứu thị trường',task:'Xây dựng báo cáo insight',pic_dept:'NCTT',pic:'Thu Hà',support:'ĐSMT',deadline:'',output:'Research report',status:'Chưa bắt đầu'},
+  ],
+  planning:[
+    {id:'P01',sprint:'Tuần 9/3-21/3',deliverable:'Xây dựng Master Plan & Chuẩn hóa dự án',mo_ta:'Soát xét và chốt thông tin cốt lõi: 3 mục tiêu, nội dung, danh mục gói khám, KH mục tiêu, kênh chiến lược',dep:'-',start:'2026-03-15',end:'2026-03-22',owner:'Cường',kenh:'Strategy/Data',kpi:'Hoàn thành 100%',priority:'High',status:'Đang triển khai'},
+    {id:'P02',sprint:'Tuần 9/3-21/3',deliverable:'Đồng bộ hóa Sản phẩm/Gói khám',mo_ta:'Thống nhất khái niệm, danh mục, tên gọi (Vàng/Bạc/Kim cương), mức giá cho 4 cơ sở',dep:'P01',start:'2026-03-15',end:'2026-03-29',owner:'KHTH',kenh:'Product',kpi:'Hoàn thành đồng bộ',priority:'High',status:'Đang triển khai'},
+    {id:'P03',sprint:'Tuần 9/3-21/3',deliverable:'Thiết lập CDP & Automation',mo_ta:'Đưa KH vào CDP, theo dõi hành trình từ quảng cáo → tư vấn → đặt lịch → ra viện',dep:'P02',start:'2026-03-18',end:'2026-04-01',owner:'Cường Data',kenh:'CDP/IT',kpi:'100% KH vào luồng',priority:'High',status:'Chưa bắt đầu'},
+    {id:'P04',sprint:'Tuần 23/3',deliverable:'Cải tiến quy trình Tổng đài',mo_ta:'Đào tạo kịch bản, xin Zalo/Email, follow-up trong ngày, tư vấn theo địa lý',dep:'P01',start:'2026-03-22',end:'2026-04-05',owner:'Chị Tâm/Hảo/Trinh',kenh:'Tổng đài',kpi:'Tỷ lệ hẹn→đến X%',priority:'High',status:'Chưa bắt đầu'},
+    {id:'P05',sprint:'Tuần 23/3',deliverable:'Tối ưu hóa SEO & Content Website',mo_ta:'Rút ngắn bài SEO, nhiều hình ảnh 5 sao, lồng review/referral, tối ưu form đặt lịch',dep:'-',start:'2026-03-22',end:'2026-04-12',owner:'Lâm',kenh:'SEO',kpi:'Top 3 Google 10 KW',priority:'High',status:'Chưa bắt đầu'},
+    {id:'P06',sprint:'Tuần 23/3',deliverable:'Tự động hóa luồng nhắc lịch',mo_ta:'Mở API kết nối HIS-Tổng đài, tự động đẩy case KH không đến khám',dep:'P03,P04',start:'2026-04-01',end:'2026-04-15',owner:'IT',kenh:'CDP/IT',kpi:'100% case được follow',priority:'Medium',status:'Chưa bắt đầu'},
+    {id:'P07',sprint:'Sprint 3',deliverable:'Điều chỉnh Chiến lược Truyền thông',mo_ta:'Bám sát Kiềng 3 chân, loại bỏ hoạt động kém hiệu quả, content matrix đồng bộ',dep:'P01,P05',start:'2026-04-05',end:'2026-04-19',owner:'Đậu Thanh/Văn Thanh',kenh:'Marketing',kpi:'Giảm 20% CPL',priority:'High',status:'Chưa bắt đầu'},
+    {id:'P08',sprint:'Sprint 3',deliverable:'Triển khai PR bài viết',mo_ta:'20 bài PR/tháng trên báo lớn về KSKTQ Tâm Anh',dep:'P07',start:'2026-04-05',end:'2026-04-30',owner:'PR Team',kenh:'PR',kpi:'20 bài/tháng',priority:'Medium',status:'Chưa bắt đầu'},
+    {id:'P09',sprint:'Sprint 3',deliverable:'Đẩy mạnh Social & Ads',mo_ta:'Triển khai content theo trụ cột, chạy ads TA Q7 và TA Cầu Giấy',dep:'P07',start:'2026-04-12',end:'2026-04-30',owner:'Social/Ads Team',kenh:'Social/Ads',kpi:'Tăng 40% traffic',priority:'High',status:'Chưa bắt đầu'},
+    {id:'P10',sprint:'Sprint 4',deliverable:'Review & Đánh giá Sprint 1-3',mo_ta:'Post-mortem, đánh giá KPI, bài học kinh nghiệm, điều chỉnh chiến lược',dep:'P01-P09',start:'2026-04-28',end:'2026-05-05',owner:'All team',kenh:'PMO',kpi:'Báo cáo hoàn thành',priority:'Medium',status:'Chưa bắt đầu'},
+  ],
+  okrs:[
+    {id:'O1',cap:'Dự án',ma:'O1',muc_tieu:'Gia tăng số lượng khách hàng sử dụng dịch vụ KSKTQ',key_result:'Tăng 30% lượt khám KSKTQ so với cùng kỳ',kpi:'Số lượt khám/tháng',baseline:'',target:'30%',actual:'',owner:'Ban GĐ',freq:'Hàng tháng',source:'HIS'},
+    {id:'O2',cap:'Dự án',ma:'O2',muc_tieu:'Ưu tiên TA Q7 (Sunrise City) và TA Cầu Giấy',key_result:'TA Q7 và TA Cầu Giấy đạt 80% công suất khám',kpi:'% công suất sử dụng',baseline:'',target:'80%',actual:'',owner:'Ban GĐ',freq:'Hàng tháng',source:'HIS'},
+    {id:'O3',cap:'Dự án',ma:'O3',muc_tieu:'Chiếm lĩnh Top of Mind thương hiệu KSKTQ',key_result:'Tăng brand awareness về KSKTQ lên 50%',kpi:'Brand awareness score',baseline:'',target:'50%',actual:'',owner:'Marketing',freq:'Hàng quý',source:'Survey'},
+    {id:'WS1',cap:'Workstream',ma:'WS1',muc_tieu:'Tăng traffic & leads từ các kênh digital',key_result:'Tăng 40% traffic web và 50% leads',kpi:'Traffic/Leads/tháng',baseline:'',target:'40-50%',actual:'',owner:'Marketing+TT',freq:'Hàng tuần',source:'GA/CRM'},
+    {id:'WS2',cap:'Workstream',ma:'WS2',muc_tieu:'Cải thiện chuyển đổi tư vấn → booking',key_result:'Tỷ lệ booking từ tư vấn đạt 30%',kpi:'Conversion rate (%)',baseline:'',target:'30%',actual:'',owner:'Tổng đài',freq:'Hàng tuần',source:'CRM'},
+    {id:'WS3',cap:'Workstream',ma:'WS3',muc_tieu:'Tối ưu SEO & Content theo định hướng mới',key_result:'Top 3 Google cho 10 keywords chính',kpi:'Ranking position',baseline:'',target:'Top 3',actual:'',owner:'Lâm (SEO)',freq:'Hàng tuần',source:'SEMrush'},
+    {id:'PR',cap:'Kênh',ma:'PR',muc_tieu:'PR - Tăng độ phủ truyền thông',key_result:'20 bài PR/tháng trên báo lớn',kpi:'Số bài PR/tháng',baseline:'',target:'20',actual:'',owner:'PR Team',freq:'Hàng tuần',source:'Clipping'},
+    {id:'SEO',cap:'Kênh',ma:'SEO',muc_tieu:'SEO - Tăng organic traffic',key_result:'Tăng 50% organic traffic',kpi:'Organic sessions',baseline:'',target:'50%',actual:'',owner:'Lâm',freq:'Hàng tuần',source:'GA'},
+    {id:'Social',cap:'Kênh',ma:'Social',muc_tieu:'Social - Tăng engagement & reach',key_result:'Tăng 30% engagement rate',kpi:'Engagement rate (%)',baseline:'',target:'30%',actual:'',owner:'Social Team',freq:'Hàng tuần',source:'Meta/TikTok'},
+    {id:'Ads',cap:'Kênh',ma:'Ads',muc_tieu:'Ads - Tối ưu chi phí per lead',key_result:'Giảm 20% CPL so với hiện tại',kpi:'CPL (VND)',baseline:'',target:'-20%',actual:'',owner:'Ads Team',freq:'Hàng tuần',source:'Ads Manager'},
+    {id:'TD',cap:'Kênh',ma:'Tổng đài',muc_tieu:'Tổng đài - Tăng tỷ lệ chốt sale',key_result:'Tỷ lệ hẹn → đến khám đạt 70%',kpi:'Show rate (%)',baseline:'',target:'70%',actual:'',owner:'Chị Tâm',freq:'Hàng tuần',source:'CRM'},
+  ],
+  issues:[
+    {id:'IS01',van_de:'Thiếu đồng nhất khái niệm gói khám',mo_ta:'Khác biệt lớn giữa HN (Thông tư 32) và HCM (Vàng/Bạc/Kim cương), gây khó khăn TT & tư vấn',tac_dong:'High',bo_phan:'KHTH, Marketing, Tổng đài',ngay:'2026-03-12',status:'Đang xử lý',giai_phap:'Đồng bộ danh mục, tên gọi, giá cho 4 cơ sở',owner:'KHTH',ngay_dong:''},
+    {id:'IS02',van_de:'Kế hoạch Marketing thiếu thực tiễn',mo_ta:'Kế hoạch cồng kềnh, lý thuyết, thiếu khả thi (VD: booth chung cư, giải chạy)',tac_dong:'Medium',bo_phan:'Marketing',ngay:'2026-03-12',status:'Đang xử lý',giai_phap:'Loại bỏ hoạt động kém hiệu quả, tập trung đo lường',owner:'Đậu Thanh',ngay_dong:''},
+    {id:'IS03',van_de:'Nội dung SEO chưa tối ưu chuyển đổi',mo_ta:'Bài SEO quá dài (1000-1500 chữ), ít hình ảnh, thiếu review khách hàng',tac_dong:'Medium',bo_phan:'SEO',ngay:'2026-03-12',status:'Đang xử lý',giai_phap:'Cô đọng bài viết, thêm hình 5 sao, lồng review/referral',owner:'Lâm',ngay_dong:''},
+    {id:'IS04',van_de:'Thiếu kết nối liên phòng ban',mo_ta:'Chiến dịch hoạt động rời rạc, thiếu sợi chỉ đỏ xuyên suốt',tac_dong:'High',bo_phan:'Tất cả',ngay:'2026-03-12',status:'Đang xử lý',giai_phap:'Xây dựng Master Plan liên phòng ban, họp định kỳ',owner:'Cường',ngay_dong:''},
+    {id:'IS05',van_de:'Nhầm lẫn tệp khách hàng',mo_ta:'Tranh luận giữa khách đoàn (ngân sách thấp) và khách lẻ',tac_dong:'Medium',bo_phan:'Strategy, Marketing',ngay:'2026-03-12',status:'Đã giải quyết',giai_phap:'Ưu tiên khách lẻ chủ động, không chạy theo đoàn giá rẻ',owner:'Ban GĐ',ngay_dong:'2026-03-12'},
+  ],
+  risks:[
+    {id:'R01',rui_ro:'Không đồng bộ kịp gói khám',mo_ta:'KHTH không kịp thống nhất danh mục cho 4 cơ sở',xac_suat:'Medium',tac_dong:'High',muc_do:'High',bien_phap:'Họp khẩn KHTH 2 miền, deadline cứng 2 tuần',owner:'KHTH',status:'Open'},
+    {id:'R02',rui_ro:'Tổng đài chưa sẵn sàng',mo_ta:'Nhân viên chưa nắm kịch bản mới, chưa có API HIS',xac_suat:'Medium',tac_dong:'High',muc_do:'High',bien_phap:'Đào tạo online ngay, IT ưu tiên mở API',owner:'Chị Tâm/IT',status:'Open'},
+    {id:'R03',rui_ro:'Ngân sách vượt dự kiến',mo_ta:'Chi phí ads/PR có thể vượt budget nếu không kiểm soát',xac_suat:'Low',tac_dong:'Medium',muc_do:'Medium',bien_phap:'Review ngân sách hàng tuần, cắt giảm kênh kém hiệu quả',owner:'Marketing',status:'Open'},
+  ],
+  changes:[
+    {id:'C01',thay_doi:'Ưu tiên khách lẻ thay vì khách đoàn',ly_do:'Khách đoàn ngân sách thấp, không phù hợp định vị',tac_dong:'Thay đổi chiến lược marketing & tư vấn',ngay:'2026-03-12',phe_duyet:'Ban GĐ',status:'Đã phê duyệt'},
+    {id:'C02',thay_doi:'Tập trung TA Q7 và TA Cầu Giấy',ly_do:'Hai cơ sở có dư địa công suất lớn nhất',tac_dong:'Điều chỉnh ngân sách ads theo vùng',ngay:'2026-03-12',phe_duyet:'Ban GĐ',status:'Đã phê duyệt'},
+  ],
+  decisions:[
+    {id:'D01',quyet_dinh:'Áp dụng Kiềng 3 chân cho mọi truyền thông',ly_do:'Đảm bảo nhất quán thông điệp: BS giỏi - Máy móc - Trải nghiệm',nguoi:'Sếp Nga',ngay:'2026-03-12',anh_huong:'Marketing, SEO, Tổng đài, PR'},
+    {id:'D02',quyet_dinh:'Không nói quá trong y tế',ly_do:'Tuân thủ quy định y tế, tránh rủi ro pháp lý',nguoi:'Ban GĐ',ngay:'2026-03-12',anh_huong:'Tất cả team nội dung'},
+    {id:'D03',quyet_dinh:'Follow-up KH trong ngày/ngày hôm sau',ly_do:'Tăng tỷ lệ hẹn → đến khám',nguoi:'Sếp Nga',ngay:'2026-03-12',anh_huong:'Tổng đài, IT/CDP'},
+  ],
+  products:[
+    {id:'GOI-BAC',ma:'GOI-BAC',ten:'Gói cơ bản Bạc',doi_tuong:'Nam/Nữ',gia:'2,290,000',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'},
+    {id:'GOI-VANG-NAM',ma:'GOI-VANG-NAM',ten:'Gói Vàng (Nam)',doi_tuong:'Nam >30t',gia:'6,140,000',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'},
+    {id:'GOI-VANG-NU',ma:'GOI-VANG-NU',ten:'Gói Vàng (Nữ)',doi_tuong:'Nữ',gia:'7,230,000',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'},
+    {id:'GOI-BACHKIM',ma:'GOI-BACHKIM',ten:'Gói Bạch Kim 1975',doi_tuong:'Nam/Nữ',gia:'',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'},
+    {id:'GOI-KIMCUONG',ma:'GOI-KIMCUONG',ten:'Gói Kim Cương 1975',doi_tuong:'Nam/Nữ',gia:'',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'},
+    {id:'GOI-TAMSUAT-CC',ma:'GOI-TAMSUAT-CC',ten:'Gói tầm soát cao cấp',doi_tuong:'Nam/Nữ',gia:'',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Đang cập nhật'},
+    {id:'GOI-TAMSUAT-CS',ma:'GOI-TAMSUAT-CS',ten:'Gói tầm soát chuyên sâu',doi_tuong:'Nam/Nữ',gia:'',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Đang cập nhật'},
+  ],
+  updateLogs:[
+    {id:'UL001',type:'weekly',date:'2026-03-15',title:'Báo cáo tuần 9-15/03',content:'Đã hoàn thành Master Plan. Đang triển khai đồng bộ gói khám 4 cơ sở. IS04 (thiếu kết nối liên phòng ban) đang được xử lý qua Master Plan.',author:'Cường',tags:['PMO','Tuần 1']},
+    {id:'UL002',type:'daily',date:'2026-03-18',title:'Cập nhật ngày 18/03',content:'Bắt đầu sprint thiết lập CDP & Automation. Họp với IT Team về API HIS. Đậu Thanh đang rà soát danh mục gói khám.',author:'Cường',tags:['CDP','Sản phẩm']},
+  ],
+  budget:[
+    {id:1,hang_muc:'Quảng cáo Facebook/Meta',kenh:'Ads',planned:'',actual:'',forecast:'',owner:'Ads Team'},
+    {id:2,hang_muc:'Quảng cáo Google Ads',kenh:'Ads',planned:'',actual:'',forecast:'',owner:'Ads Team'},
+    {id:3,hang_muc:'Quảng cáo TikTok',kenh:'Ads',planned:'',actual:'',forecast:'',owner:'Ads Team'},
+    {id:4,hang_muc:'SEM (Google Search Ads)',kenh:'SEM',planned:'',actual:'',forecast:'',owner:'SEM Team'},
+    {id:5,hang_muc:'SEO & Content Production',kenh:'SEO',planned:'',actual:'',forecast:'',owner:'Lâm'},
+    {id:6,hang_muc:'PR - Bài báo & Media',kenh:'PR',planned:'',actual:'',forecast:'',owner:'PR Team'},
+    {id:7,hang_muc:'Social Content & Design',kenh:'Social',planned:'',actual:'',forecast:'',owner:'Social Team'},
+    {id:8,hang_muc:'KOL/Influencer',kenh:'Marketing',planned:'',actual:'',forecast:'',owner:'Marketing'},
+    {id:9,hang_muc:'Livestream & Video Production',kenh:'Marketing',planned:'',actual:'',forecast:'',owner:'Marketing'},
+    {id:10,hang_muc:'CDP/IT Development',kenh:'IT',planned:'',actual:'',forecast:'',owner:'IT Team'},
+    {id:11,hang_muc:'Đào tạo Tổng đài',kenh:'Tổng đài',planned:'',actual:'',forecast:'',owner:'Tổng đài'},
+    {id:12,hang_muc:'Chi phí khác',kenh:'PMO',planned:'',actual:'',forecast:'',owner:'PMO'},
+  ],
+};
+
+// ===== HELPERS =====
+function statusBadge(s){
+  if(!s) return <span className="badge badge-gray">—</span>;
+  if(s==='Đã hoàn thành'||s==='Đã giải quyết'||s==='Resolved'||s==='Đã phê duyệt') return <span className="badge badge-green">{s}</span>;
+  if(s==='Đang triển khai'||s==='Đang xử lý'||s==='In progress') return <span className="badge badge-blue">{s}</span>;
+  if(s==='Chưa bắt đầu'||s==='Not started') return <span className="badge badge-gray">{s}</span>;
+  if(s==='Open') return <span className="badge badge-yellow">{s}</span>;
+  if(s==='Active') return <span className="badge badge-green">{s}</span>;
+  return <span className="badge badge-gray">{s}</span>;
+}
+function priorityBadge(p){
+  if(p==='High') return <span className="badge badge-red">🔴 High</span>;
+  if(p==='Medium') return <span className="badge badge-yellow">🟡 Medium</span>;
+  return <span className="badge badge-gray">⚪ Low</span>;
+}
+function riskBadge(l){
+  if(l==='High') return <span className="risk-level-high">● High</span>;
+  if(l==='Medium') return <span className="risk-level-medium">● Medium</span>;
+  return <span className="risk-level-low">● Low</span>;
+}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function fmtDate(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('vi-VN');}
+function wsBadge(ws){
+  return <span className="ws-badge" style={{background:WS_BG[ws]||'#edf2f7',color:WS_COLORS[ws]||'#4a5568'}}>{ws}</span>;
+}
+
+// ===== MODAL =====
+function Modal({show,onClose,title,children,footer}){
+  if(!show) return null;
+  return <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+    <div className="modal">
+      <div className="modal-header">
+        <h3>{title}</h3>
+        <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',fontSize:18,color:'#718096'}}>✕</button>
+      </div>
+      <div className="modal-body">{children}</div>
+      {footer&&<div className="modal-footer">{footer}</div>}
+    </div>
+  </div>;
+}
+
+// ===== DASHBOARD =====
+function Dashboard({data}){
+  const total=data.tasks.length;
+  const done=data.tasks.filter(t=>t.status==='Đã hoàn thành').length;
+  const inprog=data.tasks.filter(t=>t.status==='Đang triển khai').length;
+  const notstart=data.tasks.filter(t=>t.status==='Chưa bắt đầu').length;
+  const pct=Math.round(done/total*100);
+  const openIssues=data.issues.filter(i=>i.status!=='Đã giải quyết').length;
+  const highRisks=data.risks.filter(r=>r.muc_do==='High').length;
+  const today=new Date();
+  const overdue=data.tasks.filter(t=>t.deadline&&t.status!=='Đã hoàn thành'&&new Date(t.deadline)<today).length;
+
+  // upcoming deadlines
+  const upcoming=data.tasks
+    .filter(t=>t.deadline&&t.status!=='Đã hoàn thành')
+    .sort((a,b)=>a.deadline.localeCompare(b.deadline))
+    .slice(0,5);
+
+  // sprint progress
+  const planDone=data.planning.filter(p=>p.status==='Đã hoàn thành').length;
+  const planInprog=data.planning.filter(p=>p.status==='Đang triển khai').length;
+
+  return <div>
+    <div className="page-header">
+      <h1>🏥 Dashboard – Dự án KSKTQ 2026</h1>
+      <p>Bệnh viện Đa khoa Tâm Anh • Cập nhật: {fmtDate(todayStr())}</p>
+    </div>
+
+    <div className="stat-grid">
+      <div className="stat-card" style={{'--color':'#003087'}}>
+        <div className="label">Tiến độ tổng thể</div>
+        <div className="value">{pct}%</div>
+        <div className="sub">{done}/{total} tasks hoàn thành</div>
+        <div className="progress-bar" style={{marginTop:8}}>
+          <div className="progress-fill" style={{width:pct+'%',background:'#003087'}}/>
+        </div>
+      </div>
+      <div className="stat-card" style={{'--color':'#276749'}}>
+        <div className="label">Đã hoàn thành</div>
+        <div className="value">{done}</div>
+        <div className="sub">tasks xong</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#2b6cb0'}}>
+        <div className="label">Đang triển khai</div>
+        <div className="value">{inprog}</div>
+        <div className="sub">tasks đang chạy</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#975a16'}}>
+        <div className="label">Quá hạn</div>
+        <div className="value">{overdue}</div>
+        <div className="sub">cần xử lý ngay</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#c53030'}}>
+        <div className="label">Issues mở</div>
+        <div className="value">{openIssues}</div>
+        <div className="sub">{highRisks} rủi ro cao</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#6b46c1'}}>
+        <div className="label">Team members</div>
+        <div className="value">{data.team.length}</div>
+        <div className="sub">bộ phận tham gia</div>
+      </div>
+    </div>
+
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+      {/* Progress by workstream */}
+      <div className="card">
+        <div className="card-title">📊 Tiến độ theo Workstream</div>
+        {Object.keys(WS_COLORS).filter(ws=>data.tasks.some(t=>t.ws===ws)).map(ws=>{
+          const wsTasks=data.tasks.filter(t=>t.ws===ws);
+          const wsDone=wsTasks.filter(t=>t.status==='Đã hoàn thành').length;
+          const wsPct=Math.round(wsDone/wsTasks.length*100);
+          return <div key={ws} style={{marginBottom:10}}>
+            <div style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:3}}>
+              <span style={{fontWeight:600,color:WS_COLORS[ws]||'#4a5568'}}>{ws}</span>
+              <span style={{color:'#718096'}}>{wsDone}/{wsTasks.length} ({wsPct}%)</span>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{width:wsPct+'%',background:WS_COLORS[ws]||'#003087'}}/>
+            </div>
+          </div>;
+        })}
+      </div>
+
+      {/* Upcoming deadlines */}
+      <div className="card">
+        <div className="card-title">📅 Deadline sắp tới</div>
+        {upcoming.length===0&&<div className="empty-state"><p>Không có deadline sắp tới</p></div>}
+        {upcoming.map(t=>{
+          const dl=new Date(t.deadline);
+          const diff=Math.ceil((dl-today)/(1000*60*60*24));
+          const overdue=diff<0;
+          return <div key={t.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:'1px solid #f0f4f8'}}>
+            <div>
+              <div style={{fontSize:13,fontWeight:600,color:'#2d3748'}}>{t.task}</div>
+              <div style={{fontSize:11,color:'#718096'}}>{t.pic} • {wsBadge(t.ws)}</div>
+            </div>
+            <div style={{textAlign:'right',flexShrink:0,marginLeft:8}}>
+              <div style={{fontSize:12,fontWeight:700,color:overdue?'#c53030':diff<=3?'#975a16':'#276749'}}>
+                {overdue?`Quá ${-diff}ngày`:diff===0?'Hôm nay':`Còn ${diff}ngày`}
+              </div>
+              <div style={{fontSize:11,color:'#a0aec0'}}>{fmtDate(t.deadline)}</div>
+            </div>
+          </div>;
+        })}
+      </div>
+    </div>
+
+    {/* Sprint Overview */}
+    <div className="card" style={{marginTop:0}}>
+      <div className="card-title">🚀 Master Plan – Tổng quan Sprint</div>
+      <div style={{overflowX:'auto'}}>
+        <table className="table">
+          <thead><tr>
+            <th>ID</th><th>Sprint</th><th>Deliverable</th><th>Owner</th><th>KPI</th><th>Priority</th><th>Trạng thái</th>
+          </tr></thead>
+          <tbody>{data.planning.map(p=><tr key={p.id}>
+            <td style={{fontFamily:'monospace',fontWeight:700,color:'#003087'}}>{p.id}</td>
+            <td style={{fontSize:11,color:'#718096'}}>{p.sprint}</td>
+            <td style={{fontWeight:600}}>{p.deliverable}</td>
+            <td>{p.owner}</td>
+            <td style={{fontSize:11}}>{p.kpi}</td>
+            <td>{priorityBadge(p.priority)}</td>
+            <td>{statusBadge(p.status)}</td>
+          </tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* Recent updates */}
+    <div className="card">
+      <div className="card-title">📝 Cập nhật gần đây</div>
+      {data.updateLogs.slice(0,3).map(u=><div key={u.id} className="update-card" style={{'--uc':u.type==='weekly'?'#003087':'#276749'}}>
+        <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+          <span style={{fontWeight:700,fontSize:13}}>{u.title}</span>
+          <span style={{fontSize:11,color:'#a0aec0'}}>{fmtDate(u.date)} • {u.author}</span>
+        </div>
+        <p style={{fontSize:13,color:'#4a5568'}}>{u.content}</p>
+        <div style={{marginTop:6,display:'flex',gap:4}}>
+          {u.tags.map(tag=><span key={tag} className="badge badge-blue">{tag}</span>)}
+        </div>
+      </div>)}
+      {data.updateLogs.length===0&&<div className="empty-state"><p>Chưa có cập nhật nào</p></div>}
+    </div>
+  </div>;
+}
+
+
+// ===== TASKS =====
+function Tasks({data,setData}){
+  const [filterWS,setFilterWS]=useState('Tất cả');
+  const [filterStatus,setFilterStatus]=useState('Tất cả');
+  const [search,setSearch]=useState('');
+  const [showModal,setShowModal]=useState(false);
+  const [editTask,setEditTask]=useState(null);
+  const [form,setForm]=useState({});
+
+  const WS_LIST=['Tất cả',...[...new Set(data.tasks.map(t=>t.ws))]];
+  const STATUS_LIST=['Tất cả','Đã hoàn thành','Đang triển khai','Chưa bắt đầu'];
+
+  const filtered=data.tasks.filter(t=>{
+    if(filterWS!=='Tất cả'&&t.ws!==filterWS) return false;
+    if(filterStatus!=='Tất cả'&&t.status!==filterStatus) return false;
+    if(search&&!t.task.toLowerCase().includes(search.toLowerCase())&&!t.pic.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  function openAdd(){setForm({ws:'Quản lý dự án',task:'',pic_dept:'',pic:'',support:'',deadline:'',output:'',status:'Chưa bắt đầu'});setEditTask(null);setShowModal(true);}
+  function openEdit(t){setForm({...t});setEditTask(t);setShowModal(true);}
+  function save(){
+    if(!form.task.trim()) return;
+    if(editTask){
+      setData(d=>({...d,tasks:d.tasks.map(t=>t.id===editTask.id?{...form,id:t.id}:t)}));
+    } else {
+      setData(d=>({...d,tasks:[...d.tasks,{...form,id:d.tasks.length+1}]}));
+    }
+    setShowModal(false);
+  }
+  function del(id){if(window.confirm('Xóa task này?')) setData(d=>({...d,tasks:d.tasks.filter(t=>t.id!==id)}));}
+  function quickStatus(id,st){setData(d=>({...d,tasks:d.tasks.map(t=>t.id===id?{...t,status:st}:t)}));}
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>✅ Checklist & Tasks</h1><p>{filtered.length} tasks • {data.tasks.filter(t=>t.status==='Đã hoàn thành').length} hoàn thành</p></div>
+      <button className="btn btn-primary" onClick={openAdd}><i className="fa fa-plus"/>Thêm Task</button>
+    </div>
+    <div className="filter-bar">
+      <input className="form-input" style={{width:220}} placeholder="🔍 Tìm task, người phụ trách..." value={search} onChange={e=>setSearch(e.target.value)}/>
+      {STATUS_LIST.map(s=><span key={s} className={'chip'+(filterStatus===s?' active':'')} onClick={()=>setFilterStatus(s)}>{s}</span>)}
+    </div>
+    <div className="filter-bar" style={{marginTop:-6}}>
+      {WS_LIST.map(ws=><span key={ws} className={'chip'+(filterWS===ws?' active':'')} onClick={()=>setFilterWS(ws)}>{ws}</span>)}
+    </div>
+    <div className="card" style={{padding:0,overflow:'hidden'}}>
+      <table className="table">
+        <thead><tr>
+          <th>#</th><th>Workstream</th><th style={{minWidth:220}}>Task</th><th>PIC</th><th>Support</th><th>Deadline</th><th>Output</th><th>Trạng thái</th><th></th>
+        </tr></thead>
+        <tbody>{filtered.map(t=>{
+          const today=new Date(); const dl=t.deadline?new Date(t.deadline):null;
+          const overdue=dl&&t.status!=='Đã hoàn thành'&&dl<today;
+          return <tr key={t.id} style={{background:overdue?'#fff5f5':''}}>
+            <td style={{color:'#a0aec0',fontWeight:600}}>{t.id}</td>
+            <td>{wsBadge(t.ws)}</td>
+            <td style={{fontWeight:600,color:'#2d3748'}}>{t.task}</td>
+            <td>
+              <div style={{fontWeight:600,fontSize:13}}>{t.pic}</div>
+              <div style={{fontSize:11,color:'#718096'}}>{t.pic_dept}</div>
+            </td>
+            <td style={{fontSize:12,color:'#718096'}}>{t.support}</td>
+            <td style={{fontSize:12,color:overdue?'#c53030':'#4a5568',fontWeight:overdue?700:400}}>
+              {t.deadline?fmtDate(t.deadline):'—'}{overdue&&' ⚠️'}
+            </td>
+            <td style={{fontSize:12,color:'#718096'}}>{t.output||'—'}</td>
+            <td>
+              <select className="form-select" style={{fontSize:12,padding:'3px 6px'}} value={t.status||'Chưa bắt đầu'} onChange={e=>quickStatus(t.id,e.target.value)}>
+                <option>Đã hoàn thành</option>
+                <option>Đang triển khai</option>
+                <option>Chưa bắt đầu</option>
+                <option>Bị chặn</option>
+              </select>
+            </td>
+            <td>
+              <div style={{display:'flex',gap:4}}>
+                <button className="btn btn-outline btn-sm" onClick={()=>openEdit(t)}>✏️</button>
+                <button className="btn btn-danger btn-sm" onClick={()=>del(t.id)}>🗑</button>
+              </div>
+            </td>
+          </tr>;
+        })}</tbody>
+      </table>
+      {filtered.length===0&&<div className="empty-state"><i className="fa fa-check-circle"/><p>Không tìm thấy task nào</p></div>}
+    </div>
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={editTask?'Sửa Task':'Thêm Task mới'}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      <div className="form-group">
+        <label className="form-label">Workstream</label>
+        <select className="form-select" value={form.ws||''} onChange={e=>setForm(f=>({...f,ws:e.target.value}))}>
+          {Object.keys(WS_COLORS).map(ws=><option key={ws}>{ws}</option>)}
+        </select>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Tên Task *</label>
+        <input className="form-input" value={form.task||''} onChange={e=>setForm(f=>({...f,task:e.target.value}))} placeholder="Nhập tên task..."/>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group">
+          <label className="form-label">Phòng ban PIC</label>
+          <input className="form-input" value={form.pic_dept||''} onChange={e=>setForm(f=>({...f,pic_dept:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Người phụ trách</label>
+          <input className="form-input" value={form.pic||''} onChange={e=>setForm(f=>({...f,pic:e.target.value}))}/>
+        </div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group">
+          <label className="form-label">Support</label>
+          <input className="form-input" value={form.support||''} onChange={e=>setForm(f=>({...f,support:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Deadline</label>
+          <input type="date" className="form-input" value={form.deadline||''} onChange={e=>setForm(f=>({...f,deadline:e.target.value}))}/>
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Output kỳ vọng</label>
+        <input className="form-input" value={form.output||''} onChange={e=>setForm(f=>({...f,output:e.target.value}))}/>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Trạng thái</label>
+        <select className="form-select" value={form.status||'Chưa bắt đầu'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+          <option>Đã hoàn thành</option><option>Đang triển khai</option><option>Chưa bắt đầu</option><option>Bị chặn</option>
+        </select>
+      </div>
+    </Modal>
+  </div>;
+}
+
+// ===== PLANNING =====
+function Planning({data,setData}){
+  const [showModal,setShowModal]=useState(false);
+  const [editItem,setEditItem]=useState(null);
+  const [form,setForm]=useState({});
+
+  const sprints=[...new Set(data.planning.map(p=>p.sprint))];
+
+  function openEdit(p){setForm({...p});setEditItem(p);setShowModal(true);}
+  function openAdd(){setForm({id:'P'+(data.planning.length+1).toString().padStart(2,'0'),sprint:'Sprint mới',deliverable:'',mo_ta:'',dep:'',start:todayStr(),end:'',owner:'',kenh:'',kpi:'',priority:'Medium',status:'Chưa bắt đầu'});setEditItem(null);setShowModal(true);}
+  function save(){
+    if(!form.deliverable.trim()) return;
+    if(editItem) setData(d=>({...d,planning:d.planning.map(p=>p.id===editItem.id?{...form}:p)}));
+    else setData(d=>({...d,planning:[...d.planning,{...form}]}));
+    setShowModal(false);
+  }
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>📅 Master Plan – Sprint</h1><p>Kế hoạch tổng thể dự án KSKTQ theo sprint</p></div>
+      <button className="btn btn-primary" onClick={openAdd}><i className="fa fa-plus"/>Thêm Deliverable</button>
+    </div>
+
+    {sprints.map(sprint=>{
+      const items=data.planning.filter(p=>p.sprint===sprint);
+      const done=items.filter(p=>p.status==='Đã hoàn thành').length;
+      return <div key={sprint} className="card">
+        <div className="card-title" style={{justifyContent:'space-between'}}>
+          <span>🗓 {sprint}</span>
+          <span style={{fontSize:12,fontWeight:400,color:'#718096'}}>{done}/{items.length} hoàn thành</span>
+        </div>
+        {items.map(p=>{
+          const statusColor=p.status==='Đã hoàn thành'?'#276749':p.status==='Đang triển khai'?'#2b6cb0':'#a0aec0';
+          return <div key={p.id} style={{border:'1px solid #e2e8f0',borderRadius:8,padding:14,marginBottom:10,borderLeft:`4px solid ${statusColor}`}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
+              <div style={{flex:1}}>
+                <span style={{fontFamily:'monospace',fontSize:11,background:'#edf2f7',padding:'2px 6px',borderRadius:4,fontWeight:700,marginRight:8}}>{p.id}</span>
+                <span style={{fontWeight:700,fontSize:14}}>{p.deliverable}</span>
+              </div>
+              <div style={{display:'flex',gap:6,alignItems:'center',flexShrink:0,marginLeft:12}}>
+                {priorityBadge(p.priority)}
+                {statusBadge(p.status)}
+                <button className="btn btn-outline btn-sm" onClick={()=>openEdit(p)}>✏️</button>
+              </div>
+            </div>
+            <p style={{fontSize:13,color:'#4a5568',marginBottom:8}}>{p.mo_ta}</p>
+            <div style={{display:'flex',gap:16,fontSize:12,color:'#718096',flexWrap:'wrap'}}>
+              <span>👤 {p.owner}</span>
+              <span>🏷 {p.kenh}</span>
+              <span>📎 Dep: {p.dep||'—'}</span>
+              <span>📅 {fmtDate(p.start)} → {fmtDate(p.end)}</span>
+              <span>🎯 KPI: {p.kpi}</span>
+            </div>
+          </div>;
+        })}
+      </div>;
+    })}
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={editItem?'Sửa Deliverable':'Thêm Deliverable'}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group">
+          <label className="form-label">ID</label>
+          <input className="form-input" value={form.id||''} onChange={e=>setForm(f=>({...f,id:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Sprint</label>
+          <input className="form-input" value={form.sprint||''} onChange={e=>setForm(f=>({...f,sprint:e.target.value}))}/>
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Deliverable *</label>
+        <input className="form-input" value={form.deliverable||''} onChange={e=>setForm(f=>({...f,deliverable:e.target.value}))}/>
+      </div>
+      <div className="form-group">
+        <label className="form-label">Mô tả chi tiết</label>
+        <textarea className="form-textarea" value={form.mo_ta||''} onChange={e=>setForm(f=>({...f,mo_ta:e.target.value}))}/>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group">
+          <label className="form-label">Owner</label>
+          <input className="form-input" value={form.owner||''} onChange={e=>setForm(f=>({...f,owner:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Kênh/Bộ phận</label>
+          <input className="form-input" value={form.kenh||''} onChange={e=>setForm(f=>({...f,kenh:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Start</label>
+          <input type="date" className="form-input" value={form.start||''} onChange={e=>setForm(f=>({...f,start:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">End</label>
+          <input type="date" className="form-input" value={form.end||''} onChange={e=>setForm(f=>({...f,end:e.target.value}))}/>
+        </div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+        <div className="form-group">
+          <label className="form-label">KPI</label>
+          <input className="form-input" value={form.kpi||''} onChange={e=>setForm(f=>({...f,kpi:e.target.value}))}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Priority</label>
+          <select className="form-select" value={form.priority||'Medium'} onChange={e=>setForm(f=>({...f,priority:e.target.value}))}>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Trạng thái</label>
+          <select className="form-select" value={form.status||'Chưa bắt đầu'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+            <option>Đã hoàn thành</option><option>Đang triển khai</option><option>Chưa bắt đầu</option>
+          </select>
+        </div>
+      </div>
+    </Modal>
+  </div>;
+}
+
+
+// ===== OKRs =====
+function OKRs({data,setData}){
+  const caps=['Dự án','Workstream','Kênh'];
+  const capColors={'Dự án':'#003087','Workstream':'#276749','Kênh':'#975a16'};
+
+  function updateActual(id,val){setData(d=>({...d,okrs:d.okrs.map(o=>o.id===id?{...o,actual:val}:o)}));}
+  function updateBaseline(id,val){setData(d=>({...d,okrs:d.okrs.map(o=>o.id===id?{...o,baseline:val}:o)}));}
+
+  return <div>
+    <div className="page-header">
+      <h1>🎯 OKR & KPI Tracking</h1>
+      <p>Theo dõi mục tiêu và kết quả then chốt – cập nhật hàng tuần</p>
+    </div>
+
+    {caps.map(cap=>{
+      const items=data.okrs.filter(o=>o.cap===cap);
+      return <div key={cap}>
+        <div style={{display:'flex',alignItems:'center',gap:10,margin:'20px 0 10px'}}>
+          <div style={{width:4,height:20,background:capColors[cap],borderRadius:2}}/>
+          <h2 style={{fontSize:15,fontWeight:700,color:capColors[cap]}}>{cap==='Dự án'?'🏢 Mục tiêu Dự án':cap==='Workstream'?'⚙️ Workstream KPIs':'📡 Kênh KPIs'}</h2>
+        </div>
+        {items.map(o=>{
+          const hasActual=o.actual&&o.actual!=='';
+          return <div key={o.id} className="okr-card" style={{'--oc':capColors[cap]}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
+              <div>
+                <span style={{fontFamily:'monospace',fontSize:11,background:'#edf2f7',padding:'2px 6px',borderRadius:4,fontWeight:700,marginRight:8}}>{o.ma}</span>
+                <span style={{fontWeight:700,fontSize:14,color:'#1a365d'}}>{o.muc_tieu}</span>
+              </div>
+              <div style={{display:'flex',gap:6,flexShrink:0,marginLeft:12}}>
+                <span className="badge badge-gray">{o.freq}</span>
+              </div>
+            </div>
+            <p style={{fontSize:13,color:'#4a5568',marginBottom:10}}>📌 {o.key_result}</p>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:10}}>
+              <div>
+                <div style={{fontSize:11,color:'#a0aec0',marginBottom:3}}>KPI Metric</div>
+                <div style={{fontSize:12,fontWeight:600}}>{o.kpi}</div>
+              </div>
+              <div>
+                <div style={{fontSize:11,color:'#a0aec0',marginBottom:3}}>Baseline</div>
+                <input className="form-input" style={{padding:'4px 8px',fontSize:12}} value={o.baseline} onChange={e=>updateBaseline(o.id,e.target.value)} placeholder="Nhập baseline"/>
+              </div>
+              <div>
+                <div style={{fontSize:11,color:'#a0aec0',marginBottom:3}}>Target</div>
+                <div style={{fontSize:14,fontWeight:800,color:capColors[cap]}}>{o.target}</div>
+              </div>
+              <div>
+                <div style={{fontSize:11,color:'#a0aec0',marginBottom:3}}>Actual</div>
+                <input className="form-input" style={{padding:'4px 8px',fontSize:12,borderColor:hasActual?'#48bb78':'#e2e8f0'}} value={o.actual} onChange={e=>updateActual(o.id,e.target.value)} placeholder="Cập nhật..."/>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:'#a0aec0',marginTop:8}}>👤 {o.owner} • 📊 Nguồn: {o.source}</div>
+          </div>;
+        })}
+      </div>;
+    })}
+  </div>;
+}
+
+// ===== TEAM =====
+function Team({data,setData}){
+  const [tab,setTab]=useState('team');
+  const [showModal,setShowModal]=useState(false);
+  const [editMember,setEditMember]=useState(null);
+  const [form,setForm]=useState({});
+
+  const RACI=[
+    {deliverable:'Master Plan & Chuẩn hóa dự án',bgd:'A',dsmt:'R',khth:'C',it:'I',td:'I',seo:'I',mk:'I',pr:'I'},
+    {deliverable:'Đồng bộ gói khám 4 cơ sở',bgd:'A',dsmt:'C',khth:'R',it:'I',td:'C',seo:'I',mk:'C',pr:'I'},
+    {deliverable:'CDP & Automation',bgd:'I',dsmt:'A',khth:'C',it:'R',td:'C',seo:'I',mk:'I',pr:'I'},
+    {deliverable:'Cải tiến quy trình Tổng đài',bgd:'A',dsmt:'C',khth:'C',it:'C',td:'R',seo:'I',mk:'I',pr:'I'},
+    {deliverable:'Tối ưu SEO & Content website',bgd:'I',dsmt:'C',khth:'I',it:'I',td:'I',seo:'R',mk:'A',pr:'I'},
+    {deliverable:'Chiến lược Truyền thông/Marketing',bgd:'A',dsmt:'C',khth:'I',it:'I',td:'C',seo:'C',mk:'R',pr:'C'},
+    {deliverable:'Thực hiện PR bài viết',bgd:'I',dsmt:'I',khth:'I',it:'I',td:'I',seo:'I',mk:'C',pr:'R'},
+    {deliverable:'Quản lý KPI & Báo cáo',bgd:'A',dsmt:'R',khth:'C',it:'C',td:'C',seo:'C',mk:'C',pr:'I'},
+  ];
+  function RACICell({v}){
+    if(!v) return <td>—</td>;
+    const cls={'R':'raci-r','A':'raci-a','C':'raci-c','I':'raci-i'}[v]||'';
+    return <td><span className={cls}>{v}</span></td>;
+  }
+
+  function openAdd(){setForm({bo_phan:'',vai_tro:'',pic:'',phone:'',email:''});setEditMember(null);setShowModal(true);}
+  function openEdit(m){setForm({...m});setEditMember(m);setShowModal(true);}
+  function save(){
+    if(!form.pic.trim()) return;
+    if(editMember) setData(d=>({...d,team:d.team.map(m=>m.id===editMember.id?{...form,id:m.id}:m)}));
+    else setData(d=>({...d,team:[...d.team,{...form,id:'T'+(d.team.length+1).toString().padStart(2,'0')}]}));
+    setShowModal(false);
+  }
+  function del(id){if(window.confirm('Xóa thành viên?')) setData(d=>({...d,team:d.team.filter(m=>m.id!==id)}));}
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>👥 Team & Trách nhiệm</h1><p>{data.team.length} thành viên • Ma trận RACI</p></div>
+      {tab==='team'&&<button className="btn btn-primary" onClick={openAdd}><i className="fa fa-plus"/>Thêm Thành viên</button>}
+    </div>
+    <div className="tabs">
+      <div className={'tab'+(tab==='team'?' active':'')} onClick={()=>setTab('team')}>📋 Danh sách Team</div>
+      <div className={'tab'+(tab==='raci'?' active':'')} onClick={()=>setTab('raci')}>🔷 Ma trận RACI</div>
+    </div>
+
+    {tab==='team'&&<div className="card" style={{padding:0,overflow:'hidden'}}>
+      <table className="table">
+        <thead><tr><th>ID</th><th>Bộ phận</th><th>Vai trò</th><th>Người đại diện</th><th>SĐT</th><th>Email</th><th></th></tr></thead>
+        <tbody>{data.team.map(m=><tr key={m.id}>
+          <td style={{fontFamily:'monospace',fontWeight:700,color:'#003087'}}>{m.id}</td>
+          <td style={{fontWeight:600}}>{m.bo_phan}</td>
+          <td style={{fontSize:13,color:'#4a5568'}}>{m.vai_tro}</td>
+          <td>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <div style={{width:32,height:32,borderRadius:'50%',background:'#003087',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,flexShrink:0}}>
+                {m.pic.charAt(0).toUpperCase()}
+              </div>
+              <span style={{fontWeight:600}}>{m.pic}</span>
+            </div>
+          </td>
+          <td style={{fontSize:12}}>{m.phone||'—'}</td>
+          <td style={{fontSize:12}}>{m.email||'—'}</td>
+          <td>
+            <div style={{display:'flex',gap:4}}>
+              <button className="btn btn-outline btn-sm" onClick={()=>openEdit(m)}>✏️</button>
+              <button className="btn btn-danger btn-sm" onClick={()=>del(m.id)}>🗑</button>
+            </div>
+          </td>
+        </tr>)}</tbody>
+      </table>
+    </div>}
+
+    {tab==='raci'&&<div className="card" style={{overflowX:'auto'}}>
+      <div style={{marginBottom:12,display:'flex',gap:16,flexWrap:'wrap',fontSize:12}}>
+        <span><span className="raci-r">R</span> Responsible – Thực hiện</span>
+        <span><span className="raci-a">A</span> Accountable – Chịu TN</span>
+        <span><span className="raci-c">C</span> Consulted – Tham vấn</span>
+        <span><span className="raci-i">I</span> Informed – Được thông báo</span>
+      </div>
+      <table className="table raci-table">
+        <thead><tr>
+          <th style={{textAlign:'left',minWidth:200}}>Deliverable</th>
+          <th>Ban GĐ</th><th>ĐSMT</th><th>KHTH</th><th>IT/CDP</th><th>Tổng đài</th><th>SEO</th><th>Marketing</th><th>PR</th>
+        </tr></thead>
+        <tbody>{RACI.map((r,i)=><tr key={i}>
+          <td style={{textAlign:'left',fontWeight:500}}>{r.deliverable}</td>
+          <RACICell v={r.bgd}/><RACICell v={r.dsmt}/><RACICell v={r.khth}/><RACICell v={r.it}/>
+          <RACICell v={r.td}/><RACICell v={r.seo}/><RACICell v={r.mk}/><RACICell v={r.pr}/>
+        </tr>)}</tbody>
+      </table>
+    </div>}
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={editMember?'Sửa Thành viên':'Thêm Thành viên'}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      <div className="form-group"><label className="form-label">Bộ phận</label>
+        <input className="form-input" value={form.bo_phan||''} onChange={e=>setForm(f=>({...f,bo_phan:e.target.value}))}/></div>
+      <div className="form-group"><label className="form-label">Vai trò</label>
+        <input className="form-input" value={form.vai_tro||''} onChange={e=>setForm(f=>({...f,vai_tro:e.target.value}))}/></div>
+      <div className="form-group"><label className="form-label">Người đại diện / PIC *</label>
+        <input className="form-input" value={form.pic||''} onChange={e=>setForm(f=>({...f,pic:e.target.value}))}/></div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group"><label className="form-label">Số điện thoại</label>
+          <input className="form-input" value={form.phone||''} onChange={e=>setForm(f=>({...f,phone:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Email</label>
+          <input className="form-input" type="email" value={form.email||''} onChange={e=>setForm(f=>({...f,email:e.target.value}))}/></div>
+      </div>
+    </Modal>
+  </div>;
+}
+
+
+// ===== ISSUES & RISKS =====
+function IssuesRisks({data,setData}){
+  const [tab,setTab]=useState('issues');
+  const [showModal,setShowModal]=useState(false);
+  const [editItem,setEditItem]=useState(null);
+  const [form,setForm]=useState({});
+  const [type,setType]=useState('issue');
+
+  function openAdd(t){setType(t);setEditItem(null);
+    if(t==='issue') setForm({id:'IS'+(data.issues.length+1).toString().padStart(2,'0'),van_de:'',mo_ta:'',tac_dong:'Medium',bo_phan:'',ngay:todayStr(),status:'Đang xử lý',giai_phap:'',owner:'',ngay_dong:''});
+    else setForm({id:'R'+(data.risks.length+1).toString().padStart(2,'0'),rui_ro:'',mo_ta:'',xac_suat:'Medium',tac_dong:'Medium',muc_do:'Medium',bien_phap:'',owner:'',status:'Open'});
+    setShowModal(true);
+  }
+  function openEdit(item,t){setType(t);setForm({...item});setEditItem(item);setShowModal(true);}
+  function save(){
+    if(type==='issue'){
+      if(!form.van_de) return;
+      if(editItem) setData(d=>({...d,issues:d.issues.map(i=>i.id===editItem.id?{...form}:i)}));
+      else setData(d=>({...d,issues:[...d.issues,{...form}]}));
+    } else {
+      if(!form.rui_ro) return;
+      if(editItem) setData(d=>({...d,risks:d.risks.map(r=>r.id===editItem.id?{...form}:r)}));
+      else setData(d=>({...d,risks:[...d.risks,{...form}]}));
+    }
+    setShowModal(false);
+  }
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>⚠️ Issues & Rủi ro</h1><p>{data.issues.filter(i=>i.status!=='Đã giải quyết').length} issues mở • {data.risks.filter(r=>r.muc_do==='High').length} rủi ro cao</p></div>
+      <div style={{display:'flex',gap:8}}>
+        <button className="btn btn-outline" onClick={()=>openAdd('risk')}><i className="fa fa-plus"/>Thêm Rủi ro</button>
+        <button className="btn btn-primary" onClick={()=>openAdd('issue')}><i className="fa fa-plus"/>Thêm Issue</button>
+      </div>
+    </div>
+    <div className="tabs">
+      <div className={'tab'+(tab==='issues'?' active':'')} onClick={()=>setTab('issues')}>📋 Issue Log ({data.issues.length})</div>
+      <div className={'tab'+(tab==='risks'?' active':'')} onClick={()=>setTab('risks')}>⚠️ Risk Register ({data.risks.length})</div>
+    </div>
+
+    {tab==='issues'&&<div>
+      {data.issues.map(i=><div key={i.id} className="card" style={{borderLeft:`4px solid ${i.tac_dong==='High'?'#c53030':i.tac_dong==='Medium'?'#975a16':'#276749'}`,padding:16}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
+          <div>
+            <span style={{fontFamily:'monospace',fontSize:11,background:'#edf2f7',padding:'2px 6px',borderRadius:4,fontWeight:700,marginRight:8}}>{i.id}</span>
+            <span style={{fontWeight:700,fontSize:15}}>{i.van_de}</span>
+          </div>
+          <div style={{display:'flex',gap:6,flexShrink:0,marginLeft:12}}>
+            {riskBadge(i.tac_dong)} {statusBadge(i.status)}
+            <button className="btn btn-outline btn-sm" onClick={()=>openEdit(i,'issue')}>✏️</button>
+          </div>
+        </div>
+        <p style={{fontSize:13,color:'#4a5568',marginBottom:8}}>{i.mo_ta}</p>
+        <div style={{background:'#f7fafc',borderRadius:6,padding:10,marginBottom:8}}>
+          <span style={{fontSize:11,fontWeight:700,color:'#276749'}}>💡 Giải pháp: </span>
+          <span style={{fontSize:13}}>{i.giai_phap||'Chưa có giải pháp'}</span>
+        </div>
+        <div style={{display:'flex',gap:16,fontSize:12,color:'#718096'}}>
+          <span>👤 Owner: {i.owner}</span>
+          <span>🏷 {i.bo_phan}</span>
+          <span>📅 Phát hiện: {fmtDate(i.ngay)}</span>
+          {i.ngay_dong&&<span>✅ Đóng: {fmtDate(i.ngay_dong)}</span>}
+        </div>
+      </div>)}
+    </div>}
+
+    {tab==='risks'&&<div className="card" style={{padding:0,overflow:'hidden'}}>
+      <table className="table">
+        <thead><tr><th>ID</th><th>Rủi ro</th><th>Xác suất</th><th>Tác động</th><th>Mức độ</th><th>Biện pháp</th><th>Owner</th><th>Status</th><th></th></tr></thead>
+        <tbody>{data.risks.map(r=><tr key={r.id}>
+          <td style={{fontFamily:'monospace',fontWeight:700}}>{r.id}</td>
+          <td>
+            <div style={{fontWeight:600}}>{r.rui_ro}</div>
+            <div style={{fontSize:12,color:'#718096'}}>{r.mo_ta}</div>
+          </td>
+          <td>{riskBadge(r.xac_suat)}</td>
+          <td>{riskBadge(r.tac_dong)}</td>
+          <td>{riskBadge(r.muc_do)}</td>
+          <td style={{fontSize:12,maxWidth:200}}>{r.bien_phap}</td>
+          <td>{r.owner}</td>
+          <td><span className="badge badge-yellow">{r.status}</span></td>
+          <td><button className="btn btn-outline btn-sm" onClick={()=>openEdit(r,'risk')}>✏️</button></td>
+        </tr>)}</tbody>
+      </table>
+    </div>}
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={type==='issue'?(editItem?'Sửa Issue':'Thêm Issue mới'):(editItem?'Sửa Rủi ro':'Thêm Rủi ro mới')}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      {type==='issue'?<>
+        <div className="form-group"><label className="form-label">Vấn đề *</label>
+          <input className="form-input" value={form.van_de||''} onChange={e=>setForm(f=>({...f,van_de:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Mô tả chi tiết</label>
+          <textarea className="form-textarea" value={form.mo_ta||''} onChange={e=>setForm(f=>({...f,mo_ta:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Tác động</label>
+            <select className="form-select" value={form.tac_dong||'Medium'} onChange={e=>setForm(f=>({...f,tac_dong:e.target.value}))}>
+              <option>High</option><option>Medium</option><option>Low</option></select></div>
+          <div className="form-group"><label className="form-label">Trạng thái</label>
+            <select className="form-select" value={form.status||'Đang xử lý'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+              <option>Đang xử lý</option><option>Đã giải quyết</option><option>Tạm hoãn</option></select></div>
+          <div className="form-group"><label className="form-label">Ngày phát hiện</label>
+            <input type="date" className="form-input" value={form.ngay||todayStr()} onChange={e=>setForm(f=>({...f,ngay:e.target.value}))}/></div>
+        </div>
+        <div className="form-group"><label className="form-label">Bộ phận liên quan</label>
+          <input className="form-input" value={form.bo_phan||''} onChange={e=>setForm(f=>({...f,bo_phan:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Owner</label>
+            <input className="form-input" value={form.owner||''} onChange={e=>setForm(f=>({...f,owner:e.target.value}))}/></div>
+          <div className="form-group"><label className="form-label">Ngày đóng</label>
+            <input type="date" className="form-input" value={form.ngay_dong||''} onChange={e=>setForm(f=>({...f,ngay_dong:e.target.value}))}/></div>
+        </div>
+        <div className="form-group"><label className="form-label">Giải pháp</label>
+          <textarea className="form-textarea" value={form.giai_phap||''} onChange={e=>setForm(f=>({...f,giai_phap:e.target.value}))}/></div>
+      </>:<>
+        <div className="form-group"><label className="form-label">Rủi ro *</label>
+          <input className="form-input" value={form.rui_ro||''} onChange={e=>setForm(f=>({...f,rui_ro:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Mô tả</label>
+          <textarea className="form-textarea" value={form.mo_ta||''} onChange={e=>setForm(f=>({...f,mo_ta:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Xác suất</label>
+            <select className="form-select" value={form.xac_suat||'Medium'} onChange={e=>setForm(f=>({...f,xac_suat:e.target.value}))}>
+              <option>High</option><option>Medium</option><option>Low</option></select></div>
+          <div className="form-group"><label className="form-label">Tác động</label>
+            <select className="form-select" value={form.tac_dong||'Medium'} onChange={e=>setForm(f=>({...f,tac_dong:e.target.value}))}>
+              <option>High</option><option>Medium</option><option>Low</option></select></div>
+          <div className="form-group"><label className="form-label">Mức độ</label>
+            <select className="form-select" value={form.muc_do||'Medium'} onChange={e=>setForm(f=>({...f,muc_do:e.target.value}))}>
+              <option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <div className="form-group"><label className="form-label">Biện pháp giảm thiểu</label>
+          <textarea className="form-textarea" value={form.bien_phap||''} onChange={e=>setForm(f=>({...f,bien_phap:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Owner</label>
+            <input className="form-input" value={form.owner||''} onChange={e=>setForm(f=>({...f,owner:e.target.value}))}/></div>
+          <div className="form-group"><label className="form-label">Trạng thái</label>
+            <select className="form-select" value={form.status||'Open'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+              <option>Open</option><option>Mitigated</option><option>Closed</option></select></div>
+        </div>
+      </>}
+    </Modal>
+  </div>;
+}
+
+// ===== CHANGE LOG =====
+function ChangeLog({data,setData}){
+  const [tab,setTab]=useState('changes');
+  const [showModal,setShowModal]=useState(false);
+  const [type,setType]=useState('change');
+  const [form,setForm]=useState({});
+
+  function openAdd(t){setType(t);
+    if(t==='change') setForm({id:'C'+(data.changes.length+1).toString().padStart(2,'0'),thay_doi:'',ly_do:'',tac_dong:'',ngay:todayStr(),phe_duyet:'',status:'Chờ phê duyệt'});
+    else setForm({id:'D'+(data.decisions.length+1).toString().padStart(2,'0'),quyet_dinh:'',ly_do:'',nguoi:'',ngay:todayStr(),anh_huong:''});
+    setShowModal(true);
+  }
+  function save(){
+    if(type==='change'){
+      if(!form.thay_doi) return;
+      setData(d=>({...d,changes:[...d.changes,{...form}]}));
+    } else {
+      if(!form.quyet_dinh) return;
+      setData(d=>({...d,decisions:[...d.decisions,{...form}]}));
+    }
+    setShowModal(false);
+  }
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>🔄 Change & Decision Log</h1><p>Theo dõi thay đổi và quyết định trong dự án</p></div>
+      <div style={{display:'flex',gap:8}}>
+        <button className="btn btn-outline" onClick={()=>openAdd('decision')}><i className="fa fa-plus"/>Quyết định</button>
+        <button className="btn btn-primary" onClick={()=>openAdd('change')}><i className="fa fa-plus"/>Thay đổi</button>
+      </div>
+    </div>
+    <div className="tabs">
+      <div className={'tab'+(tab==='changes'?' active':'')} onClick={()=>setTab('changes')}>🔄 Change Log ({data.changes.length})</div>
+      <div className={'tab'+(tab==='decisions'?' active':'')} onClick={()=>setTab('decisions')}>✅ Decision Log ({data.decisions.length})</div>
+    </div>
+
+    {tab==='changes'&&<div>
+      {data.changes.map(c=><div key={c.id} className="card" style={{borderLeft:'4px solid #003087',padding:16}}>
+        <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+          <div>
+            <span style={{fontFamily:'monospace',fontSize:11,background:'#edf2f7',padding:'2px 6px',borderRadius:4,fontWeight:700,marginRight:8}}>{c.id}</span>
+            <span style={{fontWeight:700,fontSize:14}}>{c.thay_doi}</span>
+          </div>
+          {statusBadge(c.status)}
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,fontSize:13}}>
+          <div><span style={{color:'#a0aec0',fontSize:11}}>LÝ DO</span><p style={{color:'#4a5568'}}>{c.ly_do}</p></div>
+          <div><span style={{color:'#a0aec0',fontSize:11}}>TÁC ĐỘNG</span><p style={{color:'#4a5568'}}>{c.tac_dong}</p></div>
+        </div>
+        <div style={{fontSize:12,color:'#718096',marginTop:8}}>👤 Phê duyệt: {c.phe_duyet} • 📅 {fmtDate(c.ngay)}</div>
+      </div>)}
+    </div>}
+
+    {tab==='decisions'&&<div>
+      {data.decisions.map(d=><div key={d.id} className="card" style={{borderLeft:'4px solid #276749',padding:16}}>
+        <div style={{marginBottom:6}}>
+          <span style={{fontFamily:'monospace',fontSize:11,background:'#edf2f7',padding:'2px 6px',borderRadius:4,fontWeight:700,marginRight:8}}>{d.id}</span>
+          <span style={{fontWeight:700,fontSize:14}}>{d.quyet_dinh}</span>
+        </div>
+        <div style={{fontSize:13,color:'#4a5568',marginBottom:8}}>{d.ly_do}</div>
+        <div style={{fontSize:12,color:'#718096'}}>👤 {d.nguoi} • 📅 {fmtDate(d.ngay)} • 🎯 Ảnh hưởng: {d.anh_huong}</div>
+      </div>)}
+    </div>}
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={type==='change'?'Thêm Thay đổi':'Thêm Quyết định'}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      {type==='change'?<>
+        <div className="form-group"><label className="form-label">Thay đổi *</label>
+          <input className="form-input" value={form.thay_doi||''} onChange={e=>setForm(f=>({...f,thay_doi:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Lý do</label>
+          <textarea className="form-textarea" value={form.ly_do||''} onChange={e=>setForm(f=>({...f,ly_do:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Tác động</label>
+          <input className="form-input" value={form.tac_dong||''} onChange={e=>setForm(f=>({...f,tac_dong:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Ngày</label>
+            <input type="date" className="form-input" value={form.ngay||todayStr()} onChange={e=>setForm(f=>({...f,ngay:e.target.value}))}/></div>
+          <div className="form-group"><label className="form-label">Phê duyệt bởi</label>
+            <input className="form-input" value={form.phe_duyet||''} onChange={e=>setForm(f=>({...f,phe_duyet:e.target.value}))}/></div>
+          <div className="form-group"><label className="form-label">Trạng thái</label>
+            <select className="form-select" value={form.status||'Chờ phê duyệt'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+              <option>Chờ phê duyệt</option><option>Đã phê duyệt</option><option>Từ chối</option></select></div>
+        </div>
+      </>:<>
+        <div className="form-group"><label className="form-label">Quyết định *</label>
+          <input className="form-input" value={form.quyet_dinh||''} onChange={e=>setForm(f=>({...f,quyet_dinh:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Lý do</label>
+          <textarea className="form-textarea" value={form.ly_do||''} onChange={e=>setForm(f=>({...f,ly_do:e.target.value}))}/></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">Người quyết định</label>
+            <input className="form-input" value={form.nguoi||''} onChange={e=>setForm(f=>({...f,nguoi:e.target.value}))}/></div>
+          <div className="form-group"><label className="form-label">Ngày</label>
+            <input type="date" className="form-input" value={form.ngay||todayStr()} onChange={e=>setForm(f=>({...f,ngay:e.target.value}))}/></div>
+        </div>
+        <div className="form-group"><label className="form-label">Ảnh hưởng đến</label>
+          <input className="form-input" value={form.anh_huong||''} onChange={e=>setForm(f=>({...f,anh_huong:e.target.value}))}/></div>
+      </>}
+    </Modal>
+  </div>;
+}
+
+
+// ===== UPDATE LOG =====
+function UpdateLog({data,setData}){
+  const [showModal,setShowModal]=useState(false);
+  const [form,setForm]=useState({});
+  const [filterType,setFilterType]=useState('Tất cả');
+
+  function openAdd(){setForm({type:'daily',date:todayStr(),title:'',content:'',author:'Cường',tags:''});setShowModal(true);}
+  function save(){
+    if(!form.title||!form.content) return;
+    const tags=form.tags?form.tags.split(',').map(t=>t.trim()).filter(Boolean):[];
+    setData(d=>({...d,updateLogs:[{...form,tags,id:'UL'+uid()},...d.updateLogs]}));
+    setShowModal(false);
+  }
+  function del(id){if(window.confirm('Xóa log này?')) setData(d=>({...d,updateLogs:d.updateLogs.filter(l=>l.id!==id)}));}
+
+  const filtered=data.updateLogs.filter(l=>filterType==='Tất cả'||l.type===filterType);
+  const typeColor={daily:'#276749',weekly:'#003087',milestone:'#6b46c1'};
+  const typeLabel={daily:'Cập nhật ngày','weekly':'Báo cáo tuần','milestone':'Milestone'};
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>📝 Update Log</h1><p>Nhật ký cập nhật hàng ngày & hàng tuần</p></div>
+      <button className="btn btn-primary" onClick={openAdd}><i className="fa fa-plus"/>Thêm Cập nhật</button>
+    </div>
+    <div className="filter-bar">
+      {['Tất cả','daily','weekly','milestone'].map(t=><span key={t} className={'chip'+(filterType===t?' active':'')} onClick={()=>setFilterType(t)}>
+        {t==='Tất cả'?'Tất cả':typeLabel[t]||t}
+      </span>)}
+    </div>
+
+    {filtered.length===0&&<div className="empty-state card"><i className="fa fa-journal-whills" style={{fontSize:40,color:'#cbd5e0',display:'block',marginBottom:12}}/><p>Chưa có log nào. Thêm cập nhật đầu tiên!</p></div>}
+
+    {filtered.map(log=><div key={log.id} className="update-card" style={{'--uc':typeColor[log.type]||'#e2e8f0'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
+        <div>
+          <span className="badge" style={{background:typeColor[log.type]+'22',color:typeColor[log.type],marginRight:8}}>
+            {typeLabel[log.type]||log.type}
+          </span>
+          <span style={{fontWeight:700,fontSize:14}}>{log.title}</span>
+        </div>
+        <div style={{display:'flex',gap:8,alignItems:'center',flexShrink:0,marginLeft:12}}>
+          <span style={{fontSize:12,color:'#a0aec0'}}>{fmtDate(log.date)} • {log.author}</span>
+          <button className="btn btn-danger btn-sm" onClick={()=>del(log.id)}>🗑</button>
+        </div>
+      </div>
+      <p style={{fontSize:13,color:'#4a5568',lineHeight:1.6,marginBottom:8}}>{log.content}</p>
+      {log.tags&&log.tags.length>0&&<div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
+        {log.tags.map(tag=><span key={tag} className="badge badge-blue">{tag}</span>)}
+      </div>}
+    </div>)}
+
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title="Thêm Cập nhật"
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+        <div className="form-group"><label className="form-label">Loại</label>
+          <select className="form-select" value={form.type||'daily'} onChange={e=>setForm(f=>({...f,type:e.target.value}))}>
+            <option value="daily">Cập nhật ngày</option>
+            <option value="weekly">Báo cáo tuần</option>
+            <option value="milestone">Milestone</option>
+          </select></div>
+        <div className="form-group"><label className="form-label">Ngày</label>
+          <input type="date" className="form-input" value={form.date||todayStr()} onChange={e=>setForm(f=>({...f,date:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Người cập nhật</label>
+          <input className="form-input" value={form.author||''} onChange={e=>setForm(f=>({...f,author:e.target.value}))}/></div>
+      </div>
+      <div className="form-group"><label className="form-label">Tiêu đề *</label>
+        <input className="form-input" value={form.title||''} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="VD: Báo cáo tuần 16-22/3"/></div>
+      <div className="form-group"><label className="form-label">Nội dung cập nhật *</label>
+        <textarea className="form-textarea" style={{minHeight:120}} value={form.content||''} onChange={e=>setForm(f=>({...f,content:e.target.value}))} placeholder="Tóm tắt các hoạt động, kết quả, vấn đề, kế hoạch tiếp theo..."/></div>
+      <div className="form-group"><label className="form-label">Tags (phân cách bằng dấu phẩy)</label>
+        <input className="form-input" value={form.tags||''} onChange={e=>setForm(f=>({...f,tags:e.target.value}))} placeholder="VD: SEO, Marketing, Tuần 2"/></div>
+    </Modal>
+  </div>;
+}
+
+// ===== BUDGET =====
+function Budget({data,setData}){
+  function update(id,field,val){setData(d=>({...d,budget:d.budget.map(b=>b.id===id?{...b,[field]:val}:b)}));}
+  const total={planned:0,actual:0};
+  data.budget.forEach(b=>{
+    if(b.planned) total.planned+=parseFloat(b.planned.replace(/,/g,'')||0);
+    if(b.actual) total.actual+=parseFloat(b.actual.replace(/,/g,'')||0);
+  });
+
+  return <div>
+    <div className="page-header">
+      <h1>💰 Budget System</h1>
+      <p>Quản lý ngân sách và chi tiêu dự án KSKTQ</p>
+    </div>
+    <div className="stat-grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+      <div className="stat-card" style={{'--color':'#003087'}}>
+        <div className="label">Tổng kế hoạch</div>
+        <div className="value" style={{fontSize:20}}>{total.planned?total.planned.toLocaleString('vi-VN'):'—'}</div>
+        <div className="sub">VND</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#276749'}}>
+        <div className="label">Đã chi tiêu</div>
+        <div className="value" style={{fontSize:20}}>{total.actual?total.actual.toLocaleString('vi-VN'):'—'}</div>
+        <div className="sub">VND</div>
+      </div>
+      <div className="stat-card" style={{'--color':'#975a16'}}>
+        <div className="label">Còn lại</div>
+        <div className="value" style={{fontSize:20}}>{total.planned?((total.planned-total.actual)||0).toLocaleString('vi-VN'):'—'}</div>
+        <div className="sub">VND</div>
+      </div>
+    </div>
+    <div className="card" style={{padding:0,overflow:'hidden'}}>
+      <table className="table">
+        <thead><tr><th>#</th><th>Hạng mục</th><th>Kênh</th><th>Kế hoạch (VND)</th><th>Thực tế (VND)</th><th>Dự báo (VND)</th><th>Owner</th><th>% Sử dụng</th></tr></thead>
+        <tbody>{data.budget.map(b=>{
+          const planned=parseFloat(b.planned||0);
+          const actual=parseFloat(b.actual||0);
+          const pct=planned>0?Math.round(actual/planned*100):0;
+          return <tr key={b.id}>
+            <td style={{color:'#a0aec0'}}>{b.id}</td>
+            <td style={{fontWeight:600}}>{b.hang_muc}</td>
+            <td><span className="badge badge-blue">{b.kenh}</span></td>
+            <td><input className="form-input" style={{padding:'4px 8px',fontSize:12}} value={b.planned} onChange={e=>update(b.id,'planned',e.target.value)} placeholder="Nhập..."/></td>
+            <td><input className="form-input" style={{padding:'4px 8px',fontSize:12,borderColor:b.actual?'#48bb78':'#e2e8f0'}} value={b.actual} onChange={e=>update(b.id,'actual',e.target.value)} placeholder="Nhập..."/></td>
+            <td><input className="form-input" style={{padding:'4px 8px',fontSize:12}} value={b.forecast} onChange={e=>update(b.id,'forecast',e.target.value)} placeholder="Nhập..."/></td>
+            <td style={{fontSize:12}}>{b.owner}</td>
+            <td>
+              {b.planned?<>
+                <div style={{fontSize:11,fontWeight:700,color:pct>100?'#c53030':'#276749',marginBottom:2}}>{pct}%</div>
+                <div className="progress-bar"><div className="progress-fill" style={{width:Math.min(pct,100)+'%',background:pct>100?'#c53030':'#003087'}}/></div>
+              </>:'—'}
+            </td>
+          </tr>;
+        })}</tbody>
+      </table>
+    </div>
+  </div>;
+}
+
+// ===== PRODUCTS =====
+function Products({data,setData}){
+  const [showModal,setShowModal]=useState(false);
+  const [editItem,setEditItem]=useState(null);
+  const [form,setForm]=useState({});
+
+  function openEdit(p){setForm({...p});setEditItem(p);setShowModal(true);}
+  function openAdd(){setForm({ma:'',ten:'',doi_tuong:'Nam/Nữ',gia:'',ta_q7:'✓',ta_caugiay:'✓',bvdk_hcm:'✓',bvdk_hn:'✓',status:'Active'});setEditItem(null);setShowModal(true);}
+  function save(){
+    if(!form.ten) return;
+    if(editItem) setData(d=>({...d,products:d.products.map(p=>p.id===editItem.id?{...form,id:p.id}:p)}));
+    else setData(d=>({...d,products:[...d.products,{...form,id:form.ma||uid()}]}));
+    setShowModal(false);
+  }
+
+  return <div>
+    <div className="page-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div><h1>📦 Sản phẩm & Gói khám</h1><p>Chuẩn hóa danh mục gói khám 4 cơ sở</p></div>
+      <button className="btn btn-primary" onClick={openAdd}><i className="fa fa-plus"/>Thêm Gói</button>
+    </div>
+    <div className="card" style={{background:'#fffbeb',border:'1px solid #f6e05e',marginBottom:16,padding:14}}>
+      <div style={{fontWeight:700,color:'#975a16',marginBottom:6}}>⚠️ Chỉ đạo Ban Giám đốc</div>
+      <p style={{fontSize:13,color:'#4a5568'}}>Đồng bộ hoàn toàn danh mục, tên gọi, giá cho 4 cơ sở: <strong>TA Q7 (Sunrise City)</strong>, <strong>TA Cầu Giấy</strong>, <strong>BVĐK HCM</strong>, <strong>BVĐK HN</strong></p>
+    </div>
+    <div className="card" style={{padding:0,overflow:'hidden'}}>
+      <table className="table">
+        <thead><tr><th>Mã gói</th><th>Tên gói</th><th>Đối tượng</th><th>Giá (VND)</th><th>TA Q7</th><th>TA Cầu Giấy</th><th>BVĐK HCM</th><th>BVĐK HN</th><th>Trạng thái</th><th></th></tr></thead>
+        <tbody>{data.products.map(p=><tr key={p.id}>
+          <td style={{fontFamily:'monospace',fontWeight:700,fontSize:12,color:'#003087'}}>{p.ma}</td>
+          <td style={{fontWeight:600}}>{p.ten}</td>
+          <td style={{fontSize:12}}>{p.doi_tuong}</td>
+          <td style={{fontWeight:700,color:'#276749'}}>{p.gia?p.gia+' ₫':'—'}</td>
+          <td style={{textAlign:'center',fontSize:16,color:'#276749'}}>{p.ta_q7}</td>
+          <td style={{textAlign:'center',fontSize:16,color:'#276749'}}>{p.ta_caugiay}</td>
+          <td style={{textAlign:'center',fontSize:16,color:'#276749'}}>{p.bvdk_hcm}</td>
+          <td style={{textAlign:'center',fontSize:16,color:'#276749'}}>{p.bvdk_hn}</td>
+          <td>{statusBadge(p.status)}</td>
+          <td><button className="btn btn-outline btn-sm" onClick={()=>openEdit(p)}>✏️</button></td>
+        </tr>)}</tbody>
+      </table>
+    </div>
+    <Modal show={showModal} onClose={()=>setShowModal(false)} title={editItem?'Sửa Gói khám':'Thêm Gói khám'}
+      footer={<><button className="btn btn-outline" onClick={()=>setShowModal(false)}>Hủy</button><button className="btn btn-primary" onClick={save}>Lưu</button></>}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group"><label className="form-label">Mã gói</label>
+          <input className="form-input" value={form.ma||''} onChange={e=>setForm(f=>({...f,ma:e.target.value}))}/></div>
+        <div className="form-group"><label className="form-label">Đối tượng</label>
+          <input className="form-input" value={form.doi_tuong||''} onChange={e=>setForm(f=>({...f,doi_tuong:e.target.value}))}/></div>
+      </div>
+      <div className="form-group"><label className="form-label">Tên gói *</label>
+        <input className="form-input" value={form.ten||''} onChange={e=>setForm(f=>({...f,ten:e.target.value}))}/></div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="form-group"><label className="form-label">Giá (VND)</label>
+          <input className="form-input" value={form.gia||''} onChange={e=>setForm(f=>({...f,gia:e.target.value}))} placeholder="VD: 2,290,000"/></div>
+        <div className="form-group"><label className="form-label">Trạng thái</label>
+          <select className="form-select" value={form.status||'Active'} onChange={e=>setForm(f=>({...f,status:e.target.value}))}>
+            <option>Active</option><option>Đang cập nhật</option><option>Inactive</option></select></div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        {[['ta_q7','TA Q7'],['ta_caugiay','TA Cầu Giấy'],['bvdk_hcm','BVĐK HCM'],['bvdk_hn','BVĐK HN']].map(([key,label])=><div key={key} className="form-group">
+          <label className="form-label">{label}</label>
+          <select className="form-select" value={form[key]||'✓'} onChange={e=>setForm(f=>({...f,[key]:e.target.value}))}>
+            <option value="✓">✓ Có</option><option value="—">— Không</option><option value="⏳">⏳ Đang triển khai</option></select>
+        </div>)}
+      </div>
+    </Modal>
+  </div>;
+}
+
+// ===== MAIN APP =====
+const TABS=[
+  {id:'dashboard',icon:'fa-gauge',label:'Dashboard'},
+  {id:'tasks',icon:'fa-check-square',label:'Checklist & Tasks'},
+  {id:'planning',icon:'fa-calendar-days',label:'Master Plan'},
+  {id:'okrs',icon:'fa-bullseye',label:'OKR & KPI'},
+  {id:'team',icon:'fa-users',label:'Team & RACI'},
+  {id:'issues',icon:'fa-triangle-exclamation',label:'Issues & Rủi ro'},
+  {id:'changelog',icon:'fa-rotate',label:'Change Log'},
+  {id:'updates',icon:'fa-pen-to-square',label:'Update Log'},
+  {id:'budget',icon:'fa-wallet',label:'Ngân sách'},
+  {id:'products',icon:'fa-box',label:'Gói khám'},
+];
+
+function App(){
+  const [data,setData]=useState(INIT);
+  const [tab,setTab]=useState('dashboard');
+
+  const done=data.tasks.filter(t=>t.status==='Đã hoàn thành').length;
+  const pct=Math.round(done/data.tasks.length*100);
+
+  return <div style={{display:'flex',height:'100vh',overflow:'hidden'}}>
+    <div className="sidebar">
+      <div className="sidebar-logo">
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+          <div style={{width:36,height:36,borderRadius:8,background:'rgba(255,255,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🏥</div>
+          <div>
+            <h2>KSKTQ 2026</h2>
+            <p>BV Tâm Anh</p>
+          </div>
+        </div>
+        <div style={{background:'rgba(255,255,255,0.1)',borderRadius:6,padding:'8px 10px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'rgba(255,255,255,0.7)',marginBottom:4}}>
+            <span>Tiến độ tổng thể</span><span style={{fontWeight:700,color:'#fff'}}>{pct}%</span>
+          </div>
+          <div style={{background:'rgba(255,255,255,0.2)',borderRadius:99,height:6}}>
+            <div style={{width:pct+'%',height:'100%',background:'#63b3ed',borderRadius:99}}/>
+          </div>
+        </div>
+      </div>
+      <div style={{overflowY:'auto',flex:1,paddingTop:8}}>
+        {TABS.map(t=><div key={t.id} className={'nav-item'+(tab===t.id?' active':'')} onClick={()=>setTab(t.id)}>
+          <i className={'fa '+t.icon}/><span>{t.label}</span>
+        </div>)}
+      </div>
+      <div style={{padding:'12px 16px',borderTop:'1px solid rgba(255,255,255,0.1)',fontSize:11,color:'rgba(255,255,255,0.5)'}}>
+        Khung 8S • PMO KSKTQ 2026
+      </div>
+    </div>
+    <div className="main">
+      {tab==='dashboard'&&<Dashboard data={data}/>}
+      {tab==='tasks'&&<Tasks data={data} setData={setData}/>}
+      {tab==='planning'&&<Planning data={data} setData={setData}/>}
+      {tab==='okrs'&&<OKRs data={data} setData={setData}/>}
+      {tab==='team'&&<Team data={data} setData={setData}/>}
+      {tab==='issues'&&<IssuesRisks data={data} setData={setData}/>}
+      {tab==='changelog'&&<ChangeLog data={data} setData={setData}/>}
+      {tab==='updates'&&<UpdateLog data={data} setData={setData}/>}
+      {tab==='budget'&&<Budget data={data} setData={setData}/>}
+      {tab==='products'&&<Products data={data} setData={setData}/>}
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
